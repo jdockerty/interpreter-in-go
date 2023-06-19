@@ -33,13 +33,21 @@ func (l *Lexer) readChar() {
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 
-    // Monkey doesn't care about whitespace, so we can skip it entirely.
+	// Monkey doesn't care about whitespace, so we can skip it entirely.
 	l.skipWhitespace()
 
 	// Find our current token
 	switch l.char {
 	case '=':
+        if l.peekChar() == '=' {
+            ch := l.char
+            l.readChar()
+            // We need to combine our token here to '==' after incrementing our position
+            // Otherwise it would return [...ASSIGN, ASSIGN] as 2 tokens, which is not correct.
+            tok = token.Token{Type: token.EQUAL, Literal: string(ch) + string(l.char)}
+        } else {
 		tok = newToken(token.ASSIGN, l.char)
+        }
 	case ';':
 		tok = newToken(token.SEMICOLON, l.char)
 	case '(':
@@ -50,10 +58,28 @@ func (l *Lexer) NextToken() token.Token {
 		tok = newToken(token.COMMA, l.char)
 	case '+':
 		tok = newToken(token.PLUS, l.char)
+	case '-':
+		tok = newToken(token.MINUS, l.char)
+	case '!':
+		if l.peekChar() == '=' {
+            ch := l.char
+            l.readChar()
+            tok = token.Token{Type: token.NOTEQUAL, Literal: string(ch) + string(l.char)}
+		} else {
+			tok = newToken(token.EXCLAIM, l.char)
+		}
+	case '*':
+		tok = newToken(token.MULTIPLY, l.char)
+	case '/':
+		tok = newToken(token.FSLASH, l.char)
 	case '{':
 		tok = newToken(token.LBRACE, l.char)
 	case '}':
 		tok = newToken(token.RBRACE, l.char)
+	case '<':
+		tok = newToken(token.LT, l.char)
+	case '>':
+		tok = newToken(token.GT, l.char)
 	case 0:
 		tok.Literal = ""
 		tok.Type = token.EOF
@@ -62,18 +88,28 @@ func (l *Lexer) NextToken() token.Token {
 			tok.Literal = l.readIdentifier()
 			tok.Type = token.LookupIdent(tok.Literal)
 			return tok
-		} else if isDigit(l.char){
-            tok.Type = token.INT
-            tok.Literal = l.readNumber()
-            return tok
-        } else {
+		} else if isDigit(l.char) {
+			tok.Type = token.INT
+			tok.Literal = l.readNumber()
+			return tok
+		} else {
 			tok = newToken(token.ILLEGAL, l.char)
-        }
+		}
 	}
 
 	// Move position and readPosition
 	l.readChar()
 	return tok
+}
+
+// Return the next character, without incrementing our position or readPosition
+// This is useful for multi-character operators like != and ==
+func (l *Lexer) peekChar() byte {
+	if l.readPosition >= len(l.input) {
+		return 0
+	} else {
+		return l.input[l.readPosition]
+	}
 }
 
 func (l *Lexer) skipWhitespace() {
@@ -82,14 +118,14 @@ func (l *Lexer) skipWhitespace() {
 	}
 }
 
-func  (l *Lexer) readNumber() string {
-    position := l.position
+func (l *Lexer) readNumber() string {
+	position := l.position
 
-    for isDigit(l.char) {
-        l.readChar()
-    }
+	for isDigit(l.char) {
+		l.readChar()
+	}
 
-    return l.input[position: l.position]
+	return l.input[position:l.position]
 
 }
 

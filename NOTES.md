@@ -11,9 +11,9 @@ Notes from the [Writing an Interpreter in Go](https://interpreterbook.com) book.
 ### Lexical Analysis
 
 The source itself would be difficult to work with, inputting a programming language in order to then
-have another programming language execute certain actions.
+have another programming language execute certain actions that are provided by the interpreted language.
 
-Our source will move through 2 phases, before an "actions" are done from our code.
+Our source will move through 2 phases, before any "actions" are executed from our code.
 
 The first step is to turn our source into "tokens", this is the process known as *lexical analysis* and is done by
 a lexer (sometimes known as a tokeniser or scanner). These tokens are very small, categorisable data structures which can be 
@@ -41,7 +41,14 @@ And the resulting tokens would be:
 ```
 
 Something to note, is that whitespace does not show up as a token here. This is because whitespace is not an important
-factor in the Monkey language, as opposed to an interpreted language like Python.
+factor in the Monkey language, as opposed to a language like Python.
 
 A production-ready lexer may also attach line/column numbers and file names to tokens, as this can be very useful for later messages,
 such as when errors occur - i.e. "error on line 5 near 'let' declaration" etc.
+
+### REPL - Read, Eval, Print, Loop
+
+This is what is commonly referred to as "interactive mode", in languages like Python and JavaScript you can use these extensively for debugging or 
+quick mock up of short snippets.
+
+The concept is very simple and is in the name. Input is read, sent to the interpreter for evaluation, the result of that is printed and then the cycle is repeated.
