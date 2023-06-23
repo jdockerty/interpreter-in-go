@@ -39,15 +39,15 @@ func (l *Lexer) NextToken() token.Token {
 	// Find our current token
 	switch l.char {
 	case '=':
-        if l.peekChar() == '=' {
-            ch := l.char
-            l.readChar()
-            // We need to combine our token here to '==' after incrementing our position
-            // Otherwise it would return [...ASSIGN, ASSIGN] as 2 tokens, which is not correct.
-            tok = token.Token{Type: token.EQUAL, Literal: string(ch) + string(l.char)}
-        } else {
-		tok = newToken(token.ASSIGN, l.char)
-        }
+		if l.peekChar() == '=' {
+			ch := l.char
+			l.readChar()
+			// We need to combine our token here to '==' after incrementing our position
+			// Otherwise it would return [...ASSIGN, ASSIGN] as 2 tokens, which is not correct.
+			tok = token.Token{Type: token.EQUAL, Literal: string(ch) + string(l.char)}
+		} else {
+			tok = newToken(token.ASSIGN, l.char)
+		}
 	case ';':
 		tok = newToken(token.SEMICOLON, l.char)
 	case '(':
@@ -62,9 +62,9 @@ func (l *Lexer) NextToken() token.Token {
 		tok = newToken(token.MINUS, l.char)
 	case '!':
 		if l.peekChar() == '=' {
-            ch := l.char
-            l.readChar()
-            tok = token.Token{Type: token.NOTEQUAL, Literal: string(ch) + string(l.char)}
+			ch := l.char
+			l.readChar()
+			tok = token.Token{Type: token.NOTEQUAL, Literal: string(ch) + string(l.char)}
 		} else {
 			tok = newToken(token.EXCLAIM, l.char)
 		}

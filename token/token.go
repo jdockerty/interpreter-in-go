@@ -28,8 +28,8 @@ const (
 	LT = "<"
 	GT = ">"
 
-    EQUAL = "=="
-    NOTEQUAL = "!="
+	EQUAL    = "=="
+	NOTEQUAL = "!="
 
 	// Delimiters
 	COMMA     = ","
