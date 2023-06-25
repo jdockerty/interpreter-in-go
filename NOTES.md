@@ -101,3 +101,13 @@ There are multiple strategies for parsing too, although the book does not go int
     - Bottom-up parsing
 
 The parsing strategy used for the Monkey programming language in this book is a top-down parser, specifically a recursive descent parser (top-down operator precedence) aka a "Pratt Parser" after its creator.
+
+### Pratt Parsing
+
+The main idea of this is to associate parsing functions (known as semantic code) with token types. Then, whenever a particular token type is encountered,
+the function is called to return an AST node which represents the encountered type.
+
+Each token type can have up to 2 parsing functions - depending on whether the token is found as either prefix or infix position.
+
+- Infix would be `5 + 5;`, as the operator is "in-between" the integers.
+- Prefix is like `--5`, the operator is _before_ its integer literal and will decrement the value.
